@@ -9,8 +9,19 @@ getRacial <- function(input.race,input.year){
 race.byinput <- race %>% filter(subject_race == input.race) %>% select(year_release,box_office)
 if(input.year == "After 2000"){
   race.byinput %>% filter(year_release > 1999) %>% select(box_office) %>% getMoney() %>% return()
+} else {
+  return(race.byinput)
 }
 }
-getMoney(money){
-  
-}
+getMoney <- function(money){
+  money$box_office <- substr(money$box_office,2,nchar(money$box_office))
+  scale <- substr(money$box_office,nchar(money$box_office),nchar(money$box_office))
+  money$box_office <- as.double(substr(money$box_office,1,nchar(money$box_office)-1))
+  if(scale == "K"){
+    money$box_office <- money$box_office * 1000
+    return(money)
+  } else {
+    money$box_office <- money$box_office * 1000000
+    return(money)
+  }
+} 
