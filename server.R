@@ -2,6 +2,11 @@ library(shiny)
 library(dplyr)
 library(ggplot2)
 
+
+race <- filter(biopic, race_known == "Known") %>% 
+  filter(box_office != "-") %>%
+  select(subject_race, year_release, box_office)
+
 shinyServer(function(input, output) {
   biopic <- read.csv("data/biopics.csv", stringsAsFactors = FALSE)
   getMoney <- function(money){
@@ -27,11 +32,6 @@ shinyServer(function(input, output) {
   }
   
   output$raceGraph <- renderPlot({
-    
-    race <- filter(biopic, race_known == "Known") %>% 
-      filter(box_office != "-") %>%
-      select(subject_race, year_release, box_office)
-    
     barplot(getRacial(input$race, input$year)$box_office,
             main = paste("Box office revenue for biopics featuring ",input$race," actors ",input$year,".",sep =""),
             xlab = "Films", ylab = "Revenue in millions of Dollars",
