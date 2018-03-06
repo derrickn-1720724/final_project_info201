@@ -1,28 +1,32 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage((tabsetPanel(
-    tabPanel("Introduction",
+  
+  tabPanel("Introduction",
            "Test1"   
-    ),
-    tabPanel("Gender vs Earnings",
-    "Test2"  
-    ),
-    tabPanel("Race vs Earnings",
-          "Test3"
-    ),
-    tabPanel("Number of Biopics by Race",
-             "Test4"
-    )
+  ),
+  
+  tabPanel("Gender vs Earnings",
+           "Test2", 
+           selectInput("sex", label = h3("Select Sex"), c("Male", "Female"), selected = "Male"),
+           mainPanel(
+                plotOutput("sexEffect")
+            )
+  ),
+  
+  tabPanel("Race vs Earnings",
+           "Test3",
+           selectInput("race", choices = unique(race$subject_race), label = "Subject's Race"),
+           radioButtons("year", c("before 2000", "after 2000"),label = "Year released"),
+           mainPanel(
+                plotOutput("raceGraph")
+           )
+  ),
+  
+  tabPanel("Number of Biopics by Race",
+           "Test4"
   )
-  )
+)
+)
 ))
