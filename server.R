@@ -50,7 +50,15 @@ getMoney <- function(money){
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-   
+  ## Creates bar plot of input race vs box office revenue during input year range.
+   output$raceGraph <- renderPlot({
+     barplot(getRacial(input$race,input$year)$box_office,
+             main = paste("Box office revenue for biopics featuring ",input$race," actors ",input$year,".",sep =""),
+             xlab = "Films", ylab = "Revenue in US Dollars",
+             col = "green"
+             )
+     
+   })
   output$distPlot <- renderPlot({
     
     # generate bins based on input$bins from ui.R
