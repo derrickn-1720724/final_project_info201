@@ -1,3 +1,7 @@
+library(shiny)
+library(dplyr)
+library(ggplot2)
+
 shinyServer(function(input, output) {
   biopic <- read.csv("data/biopics.csv", stringsAsFactors = FALSE)
   getMoney <- function(money){
@@ -21,7 +25,6 @@ shinyServer(function(input, output) {
       return(race.byinput)
     }
   }
-  
   
   output$raceGraph <- renderPlot({
     
@@ -49,5 +52,6 @@ shinyServer(function(input, output) {
            + labs(title = "Average Box Office Earnings", x = "Year Of Release", y = "Box Office Earnings"))
     
   })
+  
   
 })
