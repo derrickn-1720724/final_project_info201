@@ -37,10 +37,10 @@ getMoney <- function(money){
   scale <- substr(money$box_office,nchar(money$box_office),nchar(money$box_office))
   money$box_office <- as.double(substr(money$box_office,1,nchar(money$box_office)-1))
   if(scale == "K"){
-    money$box_office <- money$box_office * 1000
+    money$box_office <- money$box_office * .001
     return(money)
   } else {
-    money$box_office <- money$box_office * 1000000
+    money$box_office <- money$box_office * 1
     return(money)
   }
 } 
@@ -54,7 +54,7 @@ shinyServer(function(input, output) {
    output$raceGraph <- renderPlot({
      barplot(getRacial(input$race,input$year)$box_office,
              main = paste("Box office revenue for biopics featuring ",input$race," actors ",input$year,".",sep =""),
-             xlab = "Films", ylab = "Revenue in US Dollars",
+             xlab = "Films", ylab = "Revenue in millions of Dollars",
              col = "green"
              )
      
