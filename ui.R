@@ -18,7 +18,11 @@ shinyUI(fluidPage((tabsetPanel(
     "Test2"  
     ),
     tabPanel("Race vs Earnings",
-          "Test3"
+          "Test3",
+          selectInput("race",unique(race$subject_race), label = "Subject's Race"),
+          radioButtons("year",c("before 2000","after 2000"),label = "Year released"),
+          plotOutput("raceGraph")
+          
     ),
     tabPanel("Number of Biopics by Race",
              "Test4"
