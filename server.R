@@ -26,13 +26,13 @@ shinyServer(function(input, output) {
     if(input.year == "after 2000"){
       race.byinput %>% filter(year_release > 1999) %>% select(box_office) %>% getMoney() %>% return()
     } else {
-      return(race.byinput)
+      race.byinput %>% filter(year_release < 2000) %>% select(box_office) %>% getMoney() %>% return()
     }
   }
   
   output$raceGraph <- renderPlot({
     barplot(getRacial(input$race, input$year)$box_office,
-            main = paste("Box office revenue for biopics featuring ",input$race," actors ",input$year,".",sep =""),
+            main = paste("Box office revenue for biopics featuring ",input$race," subjects ",input$year,".",sep =""),
             xlab = "Films", ylab = "Revenue in millions of Dollars",
             col = "green"
     )
