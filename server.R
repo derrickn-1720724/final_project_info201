@@ -28,15 +28,6 @@ shinyServer(function(input, output) {
   }
   
   output$raceGraph <- renderPlot({
-    barplot(getRacial(input$race)$box_office,
-            main = 
-            xlab = "Films", ylab = "Revenue in millions of Dollars",
-            col = "green"
-    )
-    
-  })
-  
-  output$raceGraph <- renderPlot({
     return(ggplot(getRacial(input$race), aes(x= year_release, y = box_office)) + geom_bar(stat = "identity",fill = "green", color = "green4")
     + labs(title = paste("Box office revenue for biopics featuring ",input$race," subjects.",sep =""), x = "Year Of Release", y = "Revenue in millions of Dollars"))
     
