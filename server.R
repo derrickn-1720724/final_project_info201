@@ -1,73 +1,96 @@
-#
-# This is the server logic of a Shiny web application. You can run the 
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
-library("dplyr")
+library(dplyr)
+library(ggplot2)
 
-############ Racial Functions ######
-## Get relevant entries that have both a known race and known income
-## Filter data down to race, year, and box office revenue
-race <- biopic %>% filter(race_known == "Known") %>% 
+#filtering
+biopic <- read.csv("data/biopics.csv", stringsAsFactors = FALSE)
+race <- filter(biopic, race_known == "Known") %>% 
   filter(box_office != "-") %>%
-  select(subject_race,year_release,box_office)
-##filters data by input race and year range
-getRacial <- function(input.race,input.year){
-  race.byinput <- race %>% filter(subject_race == input.race) %>% select(year_release,box_office)
-  if(input.year == "after 2000"){
-    race.byinput %>% filter(year_release > 1999) %>% select(box_office) %>% getMoney() %>% return()
-  } else {
-    return(race.byinput)
-  }
-}
+  select(subject_race, year_release, box_office) %>% group_by(year_release)
 
-########### END OF RACE FUNCTIONS ##################
-
-########### General Functions ####################
-
-##Returns data frame with box office revenue converted to double.
-## Data must be non-factor. stringsAsFactors = FALSE
-getMoney <- function(money){
-  money$box_office <- substr(money$box_office,2,nchar(money$box_office))
-  scale <- substr(money$box_office,nchar(money$box_office),nchar(money$box_office))
-  money$box_office <- as.double(substr(money$box_office,1,nchar(money$box_office)-1))
-  if(scale == "K"){
-    money$box_office <- money$box_office * .001
-    return(money)
-  } else {
-    money$box_office <- money$box_office * 1
-    return(money)
-  }
-} 
-
-
-
-
-# Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-  ## Creates bar plot of input race vs box office revenue during input year range.
-   output$raceGraph <- renderPlot({
-     barplot(getRacial(input$race,input$year)$box_office,
-             main = paste("Box office revenue for biopics featuring ",input$race," actors ",input$year,".",sep =""),
-             xlab = "Films", ylab = "Revenue in millions of Dollars",
-             col = "green"
-             )
-     
-   })
-  output$distPlot <- renderPlot({
+  #function to convert 'k' to 'M'
+  getMoney <- function(money){
+    money$box_office <- substr(money$box_office,2,nchar(money$box_office))
+    scale <- substr(money$box_office,nchar(money$box_office),nchar(money$box_office))
+    money$box_office <- as.double(substr(money$box_office,1,nchar(money$box_office)-1))
+    if(scale == "K"){
+      money$box_office <- money$box_office * .001
+      return(money)
+    } else {
+      money$box_office <- money$box_office * 1
+      return(money)
+    }
+  } 
+  
+  #filtering data for race_impact bar graph and function to extract race
+  getRacial <- function(input.race, input.year){
+    race.byinput <- race %>% filter(subject_race == input.race) %>% select(year_release,box_office)
+    if(input.year == "after 2000"){
+      race.byinput %>% filter(year_release > 1999) %>% select(box_office, year_release) %>% getMoney() %>% return()
+    } else {
+      race.byinput %>% filter(year_release < 2000)  %>% select(box_office, year_release) %>% getMoney() %>% return()
+    }
+  }
+  
+  # race graph
+  output$raceGraph <- renderPlot({
+    data <- getRacial(input$race, input$year)
+    p <- ggplot(data, aes(x = year_release, y = box_office, group = year_release)) + 
+           geom_bar(stat = "identity") +
+           labs(title = paste0("Box office revenue for biopics featuring ",input$race," subjects ",input$year,"."),
+                x = "Films", y = "Revenue in millions of Dollars") +
+          theme_minimal()
+    return(p)
+  })
+  
+  # gender graph
+  output$sexEffect <- renderPlot({
     
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2] 
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+    biopic_money <- filter(biopic, subject_sex == input$sex) %>%
+      select(year_release, box_office) %>%
+      filter(box_office != "-") 
     
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
+    biopic_filter <- getMoney(biopic_money)
+    
+    return(ggplot(biopic_filter, aes(x = year_release, y = box_office)) + geom_bar(stat = "identity") +
+             labs(title = "Average Box Office Earnings", x = "Year Of Release", y = "Box Office Earnings") + 
+             theme_minimal())
     
   })
   
+  output$main_c_race <- renderPlot({
+    if(input$main_c_race == "Overall") {
+      biopic_main_c_race <- reactive({
+        df <- biopic %>%
+          filter(year_release > input$year_choice[1] & year_release < input$year_choice[2]) %>%
+          select(year_release, box_office, subject_race) %>%
+          filter(box_office != "-") %>% getMoney()
+        return(df)
+      })
+    } else { 
+      filtered <- reactive({
+        data <- filter(biopic, subject_race == input$main_c_race) %>%
+          filter(year_release > input$year_choice[1] & year_release < input$year_choice[2]) %>%
+          select(year_release, box_office, subject_race) %>%
+          filter(box_office != "-") %>% getMoney()
+      return(data)
+    })
+    }
+    
+    
+    if(input$main_c_race == "Overall") {
+      p <- ggplot(biopic_main_c_race(), aes(x = year_release, y = box_office, fill = subject_race)) + geom_bar(stat = "identity") +
+        labs(title = "Average Box Office Earnings (Overall race)", x = "Year Of Release", y = "Box Office Earnings")
+    } else {
+      p <- ggplot(filtered(), aes(x = year_release, y = box_office)) + geom_bar(stat = "identity") +
+        labs(title = paste0("Average Box Office Earnings (", input$main_c_race, ")"), x = "Year Of Release", y = "Box Office Earnings") +
+        theme_minimal()
+    }
+    
+    return(p)
+  })
+  
+  
 })
+
