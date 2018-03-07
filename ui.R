@@ -1,8 +1,6 @@
- 
 library(shinythemes)
 library(shiny)
 library(dplyr)
-
 
 shinyUI(navbarPage("Biopics Data",theme = shinytheme("yeti"),
                    
