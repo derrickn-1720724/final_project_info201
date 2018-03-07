@@ -2,13 +2,12 @@ library(shiny)
 library(dplyr)
 library(ggplot2)
 
-
+biopic <- read.csv("data/biopics.csv", stringsAsFactors = FALSE)
 race <- filter(biopic, race_known == "Known") %>% 
   filter(box_office != "-") %>%
-  select(subject_race, year_release, box_office)
+  select(subject_race, year_release, box_office) %>% group_by(year_release)
 
 shinyServer(function(input, output) {
-  biopic <- read.csv("data/biopics.csv", stringsAsFactors = FALSE)
   getMoney <- function(money){
     money$box_office <- substr(money$box_office,2,nchar(money$box_office))
     scale <- substr(money$box_office,nchar(money$box_office),nchar(money$box_office))
