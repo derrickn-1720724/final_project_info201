@@ -21,21 +21,15 @@ shinyServer(function(input, output) {
     }
   } 
   
-  getRacial <- function(input.race, input.year){
+  getRacial <- function(input.race){
     race.byinput <- race %>% filter(subject_race == input.race) %>% select(year_release,box_office)
-    if(input.year == "after 2000"){
-      race.byinput %>% filter(year_release > 1999) %>% select(box_office) %>% getMoney() %>% return()
-    } else {
-      race.byinput %>% filter(year_release < 2000) %>% select(box_office) %>% getMoney() %>% return()
-    }
+      race.byinput %>% getMoney() %>% return()
+      
   }
   
   output$raceGraph <- renderPlot({
-    barplot(getRacial(input$race, input$year)$box_office,
-            main = paste("Box office revenue for biopics featuring ",input$race," subjects ",input$year,".",sep =""),
-            xlab = "Films", ylab = "Revenue in millions of Dollars",
-            col = "green"
-    )
+    return(ggplot(getRacial(input$race), aes(x= year_release, y = box_office)) + geom_bar(stat = "identity",fill = "green", color = "green4")
+    + labs(title = "Average Box Office Earnings", x = "Year Of Release", y = "Box Office Earnings"))
     
   })
   
