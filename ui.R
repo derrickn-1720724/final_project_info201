@@ -19,8 +19,8 @@ shinyUI(navbarPage("Biopics Data",theme = shinytheme("yeti"),
     h3("Questions"),
     p("Some questions that we had:"),
     tags$ul(  
-      tags$li("How does sex affect the earnings in the box office?"),
-      tags$li("How does race affect the earnings in the box office?"),
+      tags$li("How does sex affect earnings in the box office?"),
+      tags$li("How does race affect earnings in the box office?"),
       tags$li("How has the number of Biopics focusing on minorities changed over time?")
     ),
     
