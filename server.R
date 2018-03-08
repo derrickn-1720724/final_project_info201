@@ -21,12 +21,11 @@ shinyServer(function(input, output) {
     money$box_office <- substr(money$box_office,2,nchar(money$box_office))
     scale <- substr(money$box_office,nchar(money$box_office),nchar(money$box_office))
     money$box_office <- as.double(substr(money$box_office,1,nchar(money$box_office)-1))
-    if(scale == "K"){
-      money$box_office <- money$box_office * .001
-    }
+    ifelse(scale == "K", money$box_office <- money$box_office * .001, money$box_office <- money$box_office * 1000)
     return(money)
   } 
   
+  d <- getMoney(race)
   #filtering data for race_impact bar graph and function to extract race
   getRacial <- function(input.race, input.year){
     race.byinput <- race %>% filter(subject_race == input.race) %>% select(year_release,box_office)
@@ -41,8 +40,8 @@ shinyServer(function(input, output) {
   output$raceGraph <- renderPlot({
     data <- getRacial(input$race, input$year)
     p <- ggplot(data, aes(x = year_release, y = box_office, group = year_release)) + 
-           geom_bar(stat = "identity") +
-           labs(title = paste0("Box office revenue for biopics featuring ",input$race," subjects ",input$year,"."),
+        geom_bar(stat="summary", fun.y = "mean") +
+            labs(title = paste0("Box office revenue for biopics featuring ",input$race," subjects ",input$year,"."),
                 x = "Films", y = "Revenue in millions of Dollars") +
           theme_minimal()
     return(p)
@@ -57,7 +56,7 @@ shinyServer(function(input, output) {
     
     biopic_filter <- getMoney(biopic_money)
     
-    return(ggplot(biopic_filter, aes(x = year_release, y = box_office)) + geom_bar(stat = "identity") +
+    return(ggplot(biopic_filter, aes(x = year_release, y = box_office)) + geom_bar(stat="summary", fun.y = "mean") +
              labs(title = "Average Box Office Earnings", x = "Year Of Release", y = "Box Office Earnings") + 
              theme_minimal())
     
@@ -84,10 +83,10 @@ shinyServer(function(input, output) {
     
     
     if(input$main_c_race == "Overall") {
-      p <- ggplot(biopic_main_c_race(), aes(x = year_release, y = box_office, fill = subject_race)) + geom_bar(stat = "identity") +
+      p <- ggplot(biopic_main_c_race(), aes(x = year_release, y = box_office, fill = subject_race)) + geom_bar(stat="summary", fun.y = "mean") +
         labs(title = "Average Box Office Earnings (Overall race)", x = "Year Of Release", y = "Box Office Earnings")
     } else {
-      p <- ggplot(filtered(), aes(x = year_release, y = box_office)) + geom_bar(stat = "identity") +
+      p <- ggplot(filtered(), aes(x = year_release, y = box_office)) + geom_bar(stat="summary", fun.y = "mean") +
         labs(title = paste0("Average Box Office Earnings (", input$main_c_race, ")"), x = "Year Of Release", y = "Box Office Earnings") +
         theme_minimal()
     }
