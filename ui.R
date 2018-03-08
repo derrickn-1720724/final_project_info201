@@ -73,11 +73,11 @@ shinyUI(navbarPage("Biopics Data",theme = shinytheme("yeti"),
   
   tabPanel("Race of main character impact on box office earning",
     titlePanel("Box office Earning over Time by main character's race"),
-    p("With the graph, we can see some noticable differences. In the past, 
-      film industries and the people didn't favor films featuring African American or minority actors or actresses. 
+    p("With the graph, we can see some noticable differences. In earlier years, 
+      the film industry and audiences didn't favor films featuring African American or minority actors or actresses. 
       Therefore, most African American played supporting role. 
       However, as shown in the graph by increasing box office earning of films where a minority actor or actress played main character,
-      over time, people's perception of African American actors and actresses changed"),
+      over time, people's perception of African American actors and actresses improved"),
     sidebarLayout(
       sidebarPanel(
         selectInput("main_c_race", label = "Main character's race", choices = c("White", "African American", "Overall")),
