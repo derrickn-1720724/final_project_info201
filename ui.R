@@ -13,22 +13,21 @@ shinyUI(navbarPage("Biopics Data",theme = shinytheme("yeti"),
     p("While this might interest a number of groups, our intended audience is anyone with an interest in biopics
       or even just movies in general, and would like to see how their performance has changed over time."),
     h3("Data"),
-    p("We obtained this data from the fivethirtyeight database. The data itself has the biopics from the 1940's
-      and the main character's gender, race, and the total box office earnings."),
+    p("We obtained this data from the fivethirtyeight database. The data itself consists of biopics from the 1940's to 2014
+      and tracks various statistics of the films, we focus on the subject's gender, race, and the film's total box office earnings."),
       a(href = "https://github.com/fivethirtyeight/data/blob/master/biopics/biopics.csv", "Biopics"),
     h3("Questions"),
     p("Some questions that we had:"),
     tags$ul(  
       tags$li("How does sex affect the earnings in the box office?"),
       tags$li("How does race affect the earnings in the box office?"),
-      tags$li("How has the amount of Biopics that focused on minorities changed?")
+      tags$li("How has the number of Biopics focusing on minorities changed over time?")
     ),
     
     h3("Structure"),
-    p("The tabs each contain a different graph focusing on the different questions that we had. The first
-      tab contains information based on the sex affect in the box office. The second tab shows the information
-      about the affect of race and the third tab shows the amount of movies that show the different races.
-      Each data"),
+    p("The tabs each contain a graph focusing on one of our questions. The first
+      tab contains information based on effect of a subject's sex in the box office. The second tab shows information
+      about the effect of race, and the third tab shows the amount of films made featuring different ethnicities."),
     
     h3("Project Creators"),
     tags$ul(
