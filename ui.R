@@ -7,11 +7,11 @@ shinyUI(navbarPage("Biopics Data",theme = shinytheme("yeti"),
   tabPanel("Introduction",
     titlePanel("Project Overview"),
     p("The report provides an overview on how several variables affect the outcome of how well biopics do
-      in the theatre based on their box office earnings. We also look at the main character's race to see if their
+      in the theatre as reflected by their box office earnings. We also look at the main character's race to see if there
       has been an increase in different ethnicities being brought to the theatre."),
     h3("Audience"),
-    p("While this may be interesting to anyone, our intended audience at first was for anyone who enjoyed movies or biopics
-      more specifically and would like to see how things have changed over time."),
+    p("While this might interest a number of groups, our intended audience is anyone with an interest in biopics
+      or even just movies in general, and would like to see how their performance has changed over time."),
     h3("Data"),
     p("We obtained this data from the fivethirtyeight database. The data itself has the biopics from the 1940's
       and the main character's gender, race, and the total box office earnings."),
