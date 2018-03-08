@@ -4,16 +4,19 @@ library(ggplot2)
 
 
 #filtering
-
+##Extract data from csv.
 biopic <- read.csv("data/biopics.csv", stringsAsFactors = FALSE)
+
+##Extracts data relevant to race based analysis.
+##Specifically race, year of release, and box office earnings.
 race <- filter(biopic, race_known == "Known") %>% 
   filter(box_office != "-") %>%
   select(subject_race, year_release, box_office) %>% group_by(year_release)
 
 shinyServer(function(input, output) {
 
-  #function to convert 'k' to 'M'
-
+  #Converts box office earnings from strings in the form of '$55.2M' to doubles for analysis
+  #Box office values converted to millions of dollars.
   getMoney <- function(money){
     money$box_office <- substr(money$box_office,2,nchar(money$box_office))
     scale <- substr(money$box_office,nchar(money$box_office),nchar(money$box_office))
@@ -22,7 +25,6 @@ shinyServer(function(input, output) {
       money$box_office <- money$box_office * .001
       return(money)
     } else {
-      money$box_office <- money$box_office * 1
       return(money)
     }
   } 
@@ -37,7 +39,7 @@ shinyServer(function(input, output) {
     }
   }
   
-  # race graph
+  # Graph of earnings based on race as input by user
   output$raceGraph <- renderPlot({
     data <- getRacial(input$race, input$year)
     p <- ggplot(data, aes(x = year_release, y = box_office, group = year_release)) + 
@@ -48,7 +50,7 @@ shinyServer(function(input, output) {
     return(p)
   })
   
-  # gender graph
+  #Graph of box office earnings based on sex of subject, as input by user
   output$sexEffect <- renderPlot({
     
     biopic_money <- filter(biopic, subject_sex == input$sex) %>%
