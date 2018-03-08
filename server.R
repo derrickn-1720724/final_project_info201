@@ -62,7 +62,7 @@ shinyServer(function(input, output) {
              theme_minimal())
     
   })
-  
+  ## Renders a barplot of box office data for given race across specified time period.
   output$main_c_race <- renderPlot({
     if(input$main_c_race == "Overall") {
       biopic_main_c_race <- reactive({
