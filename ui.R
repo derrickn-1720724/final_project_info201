@@ -56,9 +56,9 @@ shinyUI(navbarPage("Biopics Data",theme = shinytheme("yeti"),
   
   tabPanel("Race Impact on Box office Before 2000 and After 2000",
     titlePanel("Box office Earning Over Time by Race of Subject"),
-    p("With the grah we can see the difference, how the race of subject affected box office earning. 
-      Before 2000, there weren't many movies about African American, and box office earning was low,
-      but after 2000, film industries created more movies about African American, and the box office earning have increased."),
+    p("With the graph we can see the difference, how the race of subject affected box office earnings. 
+      Before 2000, there weren't many biopics about African Americans, and box office earnings were low,
+      but after 2000, the film industry began create more movies about African Americans, and box office earnings have improved."),
     sidebarLayout(
       sidebarPanel(
         selectInput("race", choices = unique(c("White", "African American")), label = "Subject's Race"),
