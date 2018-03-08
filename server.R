@@ -23,10 +23,8 @@ shinyServer(function(input, output) {
     money$box_office <- as.double(substr(money$box_office,1,nchar(money$box_office)-1))
     if(scale == "K"){
       money$box_office <- money$box_office * .001
-      return(money)
-    } else {
-      return(money)
     }
+    return(money)
   } 
   
   #filtering data for race_impact bar graph and function to extract race
